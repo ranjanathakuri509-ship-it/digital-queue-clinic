@@ -1,0 +1,37 @@
+{% extends "base.html" %}{% block title %}ClinicQueue — Digital Queue Management{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow">DIGITAL CLINIC • SMART QUEUE</div>
+    <h1>Less waiting.<br><span>More caring.</span></h1>
+    <p>Book an appointment, receive a digital token, follow your live queue position and get notified when it is your turn.</p>
+    <div class="hero-actions"><a class="btn primary" href="{{url_for('login')}}">Get Started <span>→</span></a><a class="btn ghost" href="{{url_for('live_queue')}}">View Live Queue</a></div>
+    <div class="mini-stats"><div><b>3</b><small>Login roles</small></div><div><b>Live</b><small>Queue tracking</small></div><div><b>24/7</b><small>Digital access</small></div></div>
+  </div>
+  <div class="hero-visual">
+    <div class="queue-window">
+      <div class="window-head"><span><i></i> LIVE QUEUE</span><small>Today</small></div>
+      <div class="serving"><small>NOW SERVING</small><strong id="heroToken">#01</strong><span>General Physician · Room 101</span></div>
+      <div class="queue-preview"><div><b>#01</b><span>In Consultation</span></div><em>Room 101</em></div>
+      <div class="queue-preview"><div><b>#02</b><span>Priority</span></div><em>Waiting</em></div>
+      <div class="queue-preview"><div><b>#03</b><span>Patient</span></div><em>Waiting</em></div>
+    </div>
+    <div class="floating-card"><span class="floating-icon">✓</span><div><b>Digital Token</b><small>Automatically assigned</small></div></div>
+  </div>
+</section>
+<section class="section">
+  <div class="section-title"><div><div class="eyebrow">SYSTEM FEATURES</div><h2>Everything in one clinic portal</h2></div><p>Designed around the patient, doctor and admin workflows in your project.</p></div>
+  <div class="feature-grid">
+    <article class="feature"><span class="feature-no">01</span><h3>Digital appointments</h3><p>Patients select a doctor, date and time and receive a token automatically.</p></article>
+    <article class="feature"><span class="feature-no">02</span><h3>Live queue</h3><p>A waiting-room screen shows who is being served and who is waiting.</p></article>
+    <article class="feature"><span class="feature-no">03</span><h3>Role dashboards</h3><p>Separate interfaces for Patient, Doctor and Admin keep responsibilities clear.</p></article>
+    <article class="feature"><span class="feature-no">04</span><h3>Records & billing</h3><p>Prescriptions, medical records, notifications, bills and feedback stay organized.</p></article>
+  </div>
+</section>
+<section class="role-section"><div class="section-title"><div><div class="eyebrow">THREE PORTALS</div><h2>Built for every clinic role</h2></div></div><div class="role-grid">
+  <div class="role-card"><div class="role-icon">P</div><h3>Patient</h3><p>Book appointment · Get token · Track queue · View prescription · Billing · Feedback</p></div>
+  <div class="role-card dark"><div class="role-icon">D</div><h3>Doctor</h3><p>View today's queue · Call next patient · Add diagnosis · Prescription · Notes</p></div>
+  <div class="role-card"><div class="role-icon">A</div><h3>Admin</h3><p>Monitor clinic · Add doctors · Availability · Appointments · Feedback</p></div>
+</div></section>
+<section class="cta"><div><div class="eyebrow">READY FOR YOUR DEMO?</div><h2>Open the clinic portal and test all three roles.</h2></div><a class="btn light" href="{{url_for('login')}}">Open Login</a></section>
+{% endblock %}

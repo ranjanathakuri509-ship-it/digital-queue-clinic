@@ -1,0 +1,33 @@
+{% extends "base.html" %}{% block title %}Patient Dashboard — ClinicQueue{% endblock %}
+{% block content %}
+<div class="dashboard">
+  <div class="dash-head"><div><div class="eyebrow">PATIENT PORTAL</div><h1>Hello, {{user['name'].split()[0]}} 👋</h1><p>Manage your appointment and stay updated without waiting at the reception desk.</p></div><a class="btn primary" href="#book">+ Book Appointment</a></div>
+  <div class="stat-grid"><div class="stat-card accent"><small>My appointments</small><strong>{{appointments|length}}</strong><span>All booked visits</span></div><div class="stat-card"><small>Waiting now</small><strong>{{waiting_count}}</strong><span>Active queue tokens</span></div><div class="stat-card"><small>Notifications</small><strong>{{notifications|length}}</strong><span>Latest updates</span></div><div class="stat-card"><small>Prescriptions</small><strong>{{medicines|length}}</strong><span>Medicine records</span></div></div>
+  <div class="two-col">
+    <section class="panel" id="book"><div class="panel-head"><div><h2>Book an appointment</h2><p class="panel-sub">Your digital token is generated automatically.</p></div><span class="pill">DIGITAL TOKEN</span></div>
+      <form class="form-grid" method="post" action="{{url_for('appointment')}}">
+        <label>Doctor<select name="doctor_id" required>{% for d in doctors %}<option value="{{d.id}}" {% if not d.available %}disabled{% endif %}>{{d.name}} · {{d.specialization}}{% if not d.available %} · Unavailable{% endif %}</option>{% endfor %}</select></label>
+        <label>Date<input type="date" name="appointment_date" value="{{today}}" min="{{today}}" required></label>
+        <label>Preferred time<input type="time" name="appointment_time" required></label>
+        <label>Reason<input name="reason" placeholder="e.g. fever, follow-up"></label>
+        <label class="check"><input type="checkbox" name="priority" value="1"> Mark as priority / urgent</label>
+        <button class="btn primary" type="submit">Get Digital Token →</button>
+      </form>
+    </section>
+    <section class="panel"><div class="panel-head"><div><h2>Notifications</h2><p class="panel-sub">Latest system updates</p></div><span class="pill">LIVE</span></div>
+      {% for n in notifications %}<div class="notice"><span class="dot"></span><div><b>{{n.message}}</b><small>{{n.created_at}}</small></div></div>{% else %}<div class="empty">No notifications yet.</div>{% endfor %}
+    </section>
+  </div>
+  <section class="panel"><div class="panel-head"><div><h2>My queue & appointments</h2><p class="panel-sub">Track every token assigned to you.</p></div><a href="{{url_for('live_queue')}}">Open live queue →</a></div>
+    <div class="table-wrap"><table><thead><tr><th>Token</th><th>Doctor</th><th>Date</th><th>Time</th><th>Room</th><th>Status</th></tr></thead><tbody>{% for a in appointments %}<tr><td><b class="token">#{{a.token}}</b>{% if a.priority %}<span class="priority">PRIORITY</span>{% endif %}</td><td><b>{{a.doctor_name}}</b><small>{{a.specialization}}</small></td><td>{{a.appointment_date}}</td><td>{{a.appointment_time}}</td><td>{{a.room}}</td><td><span class="status {{a.status|lower|replace(' ','-')}}">{{a.status}}</span></td></tr>{% else %}<tr><td colspan="6" class="empty">No appointments yet. Book one above.</td></tr>{% endfor %}</tbody></table></div>
+  </section>
+  <div class="two-col">
+    <section class="panel"><div class="panel-head"><div><h2>Prescriptions</h2><p class="panel-sub">Medicines prescribed by your doctor.</p></div></div>{% for m in medicines %}<div class="medicine"><div><b>{{m.medicine}}</b><span>{{m.dosage or 'Dosage not specified'}}</span></div><p>{{m.instructions or "Follow the doctor's instructions."}}</p><small>Prescribed by {{m.doctor_name}}</small></div>{% else %}<div class="empty">No prescriptions yet.</div>{% endfor %}</section>
+    <section class="panel"><div class="panel-head"><div><h2>Billing</h2><p class="panel-sub">Your consultation charges.</p></div></div>{% for b in bills %}<div class="bill"><div><b>{{b.description or 'Clinic service'}}</b><small>{{b.created_at}}</small></div><strong>₹{{'%.2f'|format(b.amount)}}</strong><span class="status {{b.status|lower}}">{{b.status}}</span></div>{% else %}<div class="empty">No bills available.</div>{% endfor %}</section>
+  </div>
+  <div class="two-col">
+    <section class="panel"><div class="panel-head"><div><h2>Medical records</h2><p class="panel-sub">Recent diagnosis and notes.</p></div></div>{% for r in records %}<div class="record"><b>{{r.diagnosis or 'General consultation'}}</b><p>{{r.notes or 'No additional notes.'}}</p><small>{{r.doctor_name}} · {{r.created_at}}</small></div>{% else %}<div class="empty">No medical records yet.</div>{% endfor %}</section>
+    <section class="panel"><div class="panel-head"><div><h2>Share feedback</h2><p class="panel-sub">Help the clinic improve.</p></div></div><form class="feedback-form" method="post" action="{{url_for('feedback')}}"><select name="rating" required><option value="">Rating</option><option value="5">★★★★★ · 5</option><option value="4">★★★★ · 4</option><option value="3">★★★ · 3</option><option value="2">★★ · 2</option><option value="1">★ · 1</option></select><input name="message" placeholder="Tell us about your experience"><button class="btn secondary">Submit</button></form></section>
+  </div>
+</div>
+{% endblock %}

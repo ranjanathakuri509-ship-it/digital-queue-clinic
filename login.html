@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% block title %}Login — ClinicQueue{% endblock %}
+{% block content %}
+<div class="auth-page">
+  <div class="auth-info"><div class="eyebrow">CLINIC PORTAL</div><h1>One login.<br><span>Three experiences.</span></h1><p>Choose the role that matches your work in the clinic. Each role gets its own dashboard and controls.</p>
+    <div class="role-list"><div><b>01 · Patient</b><span>Appointments, tokens, queue, billing and feedback</span></div><div><b>02 · Doctor</b><span>Queue control, patient records and prescriptions</span></div><div><b>03 · Admin</b><span>Doctors, appointments, statistics and feedback</span></div></div>
+  </div>
+  <form class="auth-card" method="post"><div class="auth-heading"><div class="mini-logo">✚</div><div><h2>Welcome back</h2><p class="muted">Select your login type</p></div></div>
+    <div class="role-picker">
+      <label><input type="radio" name="role" value="patient" checked><span><strong>👤</strong><b>Patient</b><small>My queue</small></span></label>
+      <label><input type="radio" name="role" value="doctor"><span><strong>🩺</strong><b>Doctor</b><small>Today's queue</small></span></label>
+      <label><input type="radio" name="role" value="admin"><span><strong>⚙</strong><b>Admin</b><small>Clinic control</small></span></label>
+    </div>
+    <label>Email<input type="email" name="email" placeholder="you@example.com" required></label>
+    <label>Password<input type="password" name="password" placeholder="Enter password" required></label>
+    <button class="btn primary full" type="submit">Login to portal →</button>
+    <div class="demo-box"><b>Demo login</b><span>Patient · patient@clinic.com · patient123</span><span>Doctor · doctor@clinic.com · doctor123</span><span>Admin · admin@clinic.com · admin123</span></div>
+  </form>
+</div>
+{% endblock %}

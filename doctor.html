@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% block title %}Doctor Dashboard — ClinicQueue{% endblock %}
+{% block content %}
+<div class="dashboard">
+  <div class="dash-head"><div><div class="eyebrow">DOCTOR PORTAL</div><h1>Dr. {{user['name'].replace('Dr. ','')}}</h1><p>{{doctor.specialization}} · {{doctor.room}} · <span class="availability-dot">●</span> Available</p></div><button class="btn primary" id="callNext">Call Next Patient <span>→</span></button></div>
+  <div id="callMessage" class="call-message"></div>
+  <div class="stat-grid"><div class="stat-card"><small>Waiting</small><strong>{{counts.waiting}}</strong><span>Patients in queue</span></div><div class="stat-card accent"><small>Now serving</small><strong>{{counts.serving}}</strong><span>Consultation active</span></div><div class="stat-card"><small>Completed</small><strong>{{counts.completed}}</strong><span>Today's visits</span></div><div class="stat-card"><small>Room</small><strong class="room-number">{{doctor.room or '—'}}</strong><span>{{doctor.specialization}}</span></div></div>
+  <div class="two-col">
+    <section class="panel"><div class="panel-head"><div><h2>Today's queue</h2><p class="panel-sub">Priority patients are called first.</p></div><span class="pill">{{today}}</span></div><div class="doctor-queue">{% for q in queue %}<div class="doctor-row {% if q.status=='In Consultation' %}current{% endif %}"><div class="big-token">#{{q.token}}</div><div><b>{{q.patient_name}}</b><small>{{q.reason or 'General consultation'}} · {{q.phone}}</small></div><span class="status {{q.status|lower|replace(' ','-')}}">{{q.status}}</span>{% if q.priority %}<span class="priority">URGENT</span>{% endif %}</div>{% else %}<div class="empty">No patients in today's queue.</div>{% endfor %}</div></section>
+    <section class="panel"><div class="panel-head"><div><h2>Add prescription & record</h2><p class="panel-sub">Save treatment information for the patient.</p></div></div><form class="stack-form" method="post" action="{{url_for('prescription')}}"><label>Patient<select name="patient_id" required>{% for p in patients %}<option value="{{p.id}}">{{p.name}} · {{p.phone}}</option>{% endfor %}</select></label><label>Medicine<input name="medicine" placeholder="e.g. Paracetamol 500mg" required></label><label>Dosage<input name="dosage" placeholder="e.g. Twice daily"></label><label>Instructions<textarea name="instructions" placeholder="After food, etc."></textarea></label><label>Diagnosis<input name="diagnosis" placeholder="Diagnosis"></label><label>Notes<textarea name="notes" placeholder="Clinical notes"></textarea></label><button class="btn secondary">Save record</button></form></section>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script>
+document.getElementById('callNext')?.addEventListener('click', async function(){
+ const button=this, box=document.getElementById('callMessage'); button.disabled=true; button.textContent='Updating queue…';
+ try { const r=await fetch('{{url_for("call_next")}}',{method:'POST'}); const d=await r.json(); box.textContent=d.message; setTimeout(()=>location.reload(),800); }
+ catch(e){box.textContent='Unable to update the queue.'; button.disabled=false; button.textContent='Call Next Patient →';}
+});
+</script>{% endblock %}

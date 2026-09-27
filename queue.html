@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block title %}Live Queue — ClinicQueue{% endblock %}
+{% block content %}
+<div class="queue-page"><div class="dash-head"><div><div class="eyebrow">WAITING ROOM DISPLAY</div><h1>Live Queue</h1><p>Real-time queue for {{today}}. The display refreshes automatically.</p></div><span class="live-badge"><i></i> LIVE</span></div>
+  <div class="queue-board"><div class="board-head"><span>Token</span><span>Doctor / Room</span><span>Status</span></div><div id="queueGrid">{% for r in rows %}<div class="live-card {% if r.status=='In Consultation' %}now{% endif %}"><div class="live-token">#{{r.token}}</div><div><b>{{r.doctor_name}}</b><small>{{r.specialization}} · {{r.room}}</small></div><span class="status {{r.status|lower|replace(' ','-')}}">{{r.status}}</span>{% if r.priority %}<span class="priority">PRIORITY</span>{% endif %}</div>{% else %}<div class="empty">No patients have joined today's queue yet.</div>{% endfor %}</div></div>
+</div>
+{% endblock %}
+{% block scripts %}<script>
+async function refreshQueue(){try{const r=await fetch('{{url_for("api_queue")}}');const data=await r.json();const grid=document.getElementById('queueGrid');grid.innerHTML='';if(!data.length){grid.innerHTML='<div class="empty">No patients have joined today\'s queue yet.</div>';return;}data.forEach(x=>{const card=document.createElement('div');card.className='live-card '+(x.status==='In Consultation'?'now':'');card.innerHTML='<div class="live-token">#'+x.token+'</div><div><b>'+x.doctor_name+'</b><small>'+((x.specialization||'')+' · '+(x.room||''))+'</small></div><span class="status '+x.status.toLowerCase().replaceAll(' ','-')+'">'+x.status+'</span>'+(x.priority?'<span class="priority">PRIORITY</span>':'');grid.appendChild(card);});}catch(e){}}
+setInterval(refreshQueue,5000);
+</script>{% endblock %}
