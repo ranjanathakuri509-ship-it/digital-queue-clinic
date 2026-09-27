@@ -2,7 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 import os, sqlite3
 from datetime import date, datetime
 
-app = Flask(__name__)
+app = Flask(__name__,
+            template_folder='.')
 app.secret_key = os.environ.get("SECRET_KEY", "clinic-demo-secret-change-me")
 DB_PATH = os.environ.get("SQLITE_DB", os.path.join(os.path.dirname(__file__), "clinic_queue.db"))
 
